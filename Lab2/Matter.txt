@@ -1,0 +1,36 @@
+CMPE206 - Lab 2:
+----------------
+1.
+A. R5, R6, R7, R8, R9, R10, R11, and R12. These routers have all interfaces in the same area.
+
+B. R2, R3, and R4. These three routers have interfaces in two separate areas. So, they are ABRs.
+
+C. R1, R2, R3, and R4. These 4 routers are backbone routers because they all have at least one interface in the backbone area (Area 0).
+
+D. R1. This router connects the OSPF network to the internet (external network), and likely advertises a default route into the OSPF domain.
+
+E. No, it is not valid because it is not a correct OSPF design and will cause problems because Area 1 does not have an ABR connected to the backbone area, Area 0. All OSPF areas must have at least one ABR connected to the backbone area, If we connect R2 to R3, then R2 will be disconnected from the backbone area.
+
+every other router should be connected to backbone area. If we connect R2 to R3, then R2 will be disconnected from the backbone area.
+
+F. No, it is non-contiguous. OSPF interfaces in the same subnet must be in the same area. Instead of all being connected, half of area of 1 is to the left most and another half is to the right most. This kind of network design is not allowed in OSPF and will cause problems.
+
+2.
+B, F. Although, it is common practice to use Area 0 for single-area OSPF, we can actually use any area.
+The OSPF process ID does not have to match the area number. In fact, in multi-area OSPF, there will be multiple areas operating in a single process. So, it is impossible to match the process ID to all area IDs. The other statements are all true.
+
+3. C. This is the only option that contains both IP addresses in its range. So, it is the only one that activates OSPF on both interfaces.
+
+4. B. The correct is B, which configures a default route and then advertises it into OSPF using the default-information originate command.
+Option A simply configures two network commands which activates OSPF on the specified interfaces.
+Option C activates OSPF on all interfaces with an IP address, since all IP addresses match 0.0.0.0/0.
+Option D is not a real command.
+
+5. A. The correct answer is A, router-id 1.1.1.1, entered in OSPF configuration mode. The command to manually configure the EIGRP router ID is eigrp router-id, but for OSPF it is just 'router-id'.
+Option C configures an IP address on a loopback interface. If the router ID is not manually configured, this IP address might become the OSPF routerID, but it is different than manually configuring the router ID.
+
+7. C*
+
+8. C
+
+9. B

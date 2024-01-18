@@ -1,0 +1,154 @@
+Task6:
+----------
+4. What do we use to form STP info for each switch in our network? how frequent does it send?
+How long does it last?
+
+Answer:
+To form STP information for each switch in a network, switches communicate with each other by exchanging BPDU (Bridge Protocol Data Units) messages. These messages contain details regarding the switch's role in the network topology, including its bridge ID, port ID, BIDP, and priority. The switches use this information to determine the links that need to be blocked in order to avoid creating loops.
+
+By default, STP sends BPDU messages at intervals of two seconds, which is commonly referred to as "Hello Time." Nonetheless, the frequency can be modified by configuring the STP parameters on the switch. Typically, STP information remains valid as long as there are no changes to the network topology, such as the addition of a new switch or a link failure. In the event of such changes, switches affected by them exchange BPDU messages to update their STP information and adjust the network topology accordingly.
+
+The Max Age parameter in Spanning Tree Protocol (STP) is a timer that determines the duration for which a switch should retain a received Bridge Protocol Data Unit (BPDU) message before discarding it. The default setting for the Max Age parameter in STP is 20 seconds. This implies that a switch will keep a received BPDU message for 20 seconds before discarding it, unless the network topology changes during this time. If there are any changes in the network topology, the switch will receive new BPDU messages and update its STP information accordingly. However, if the network topology remains unchanged, the switch will continue to rely on the same STP information until it receives new BPDU messages.
+
+5. What is the BIDP for switches S1, S2, and S3 on VLAN 1?
+
+Answer:
+a. S1: bridge priority + system ID extension (1 in VLAN 1) = 32768 + 1 = 32769
+b. S2: 32769
+c. S3: 32769
+
+6. What is the BID for switches S1, S2, and S3 on VLAN 1? (use form BID = BIDP + Mac Address)
+
+Answer:
+BID = bridge priority + system ID extension + switch MAC address
+BID = 32769 + switch MAC address
+BID = 32769 + 0006:2AB4:BDCD (For S1)
+convert 32769 to 2-byte hexadecimal and it comes to be as 8001
+Therefore, BID = 8001:0006:2AB4:BDCD (For S1). Similarly for S2 and S3
+
+a. S1: 8001:0006:2AB4:BDCD
+
+MAC address for S2 is 0010:1169:C09B
+b. S2: 8001:0010:1169:C09B
+
+MAC address for S3 is 00E0:A306:0345
+c. S3: 8001:00E0:A306:0345
+
+7. Which switch is the root bridge switch for the VLAN 1 spanning tree? Why?
+
+Answer:
+The switch S1 is the root bridge for the VLAN1 spanning tree. Even though, the BIDPs for each switch are same, the BIDs are different. Out of all the 3 BIDs, the lowest one should be chosen which is for the switch S1.
+
+8. Which spanning tree ports are in the blocking state on the root switch? Answer ‘None’ if no such port.
+
+Answer:
+The answer is None. According to the standard, all the ports of the root switch must be in the forwarding mode.
+
+9. Which switch and port is in the blocking state? Why?
+
+Answer:
+The port Fa0/2 of switch S3 is in the blocking state because of the following reasons.
+a. It is known that S1 is the root bridge.
+b. The cost for port Fa0/1 of switch S2 to reach S1 is 19 and the cost for port Fa0/1 of switch S3 to reach S1 is 19.
+c. The cost for ports Fa0/2 of switches S2 and S3 to reach S1 is 19+19=38. So, Fa0/1 port of both switches S2 and S3, become the root ports.
+d. Now, it is to be decided that which port should be blocked among Fa0/2 of switch S2 or S3.
+e. Look at their cost to decide and it is same (38). So, check their BIDPs and these are also same. Now, look at their BIDs, the switch S2 seems to have lower BIDP than switch S3 which implies that port Fa0/2 of switch S2 is a designated port and port Fa0/2 of switch S3 is blocking port.
+
+
+Task7
+-------
+3. When Pinging from PC1 to PC2, what is the complete path for the Ping message?
+
+Answer:
+The complete for the ping message when pinging from PC1 to PC2 is PC1 -> S1 -> S2 -> PC2 -> S2 -> S1 -> PC1
+Request Packet: PC1 -> S1 -> S2 -> PC2
+Reply Packet: PC2 -> S2 -> S1 -> PC1
+
+4. Assume each switch’s backward learning table was initially empty, after Pinging from PC1 to PC2, what would the backward learning table looks like for each switch(S1, S2, S3)?
+a. Example: S1: PC1(Fa0/3), PC4(Fa0/4)
+b. Answer:
+c. S1: PC1(Fa0/3), PC2(Fa0/1)
+d. S2: PC1(Fa0/1), PC2(Fa0/3)
+e. S3: PC1(Fa0/1)
+
+S Ans:
+For Switch S1:
+PC1(Fa0/3), S2(Fa0/1)
+
+For Switch S2:
+S1(Fa0/1), PC2(Fa0/3)
+
+For Switch S3:
+Empty table
+
+5. When pinging from PC2 to PC3, what is the complete path for the Ping message?
+
+Answer:
+The complete for the ping message when pinging from PC2 to PC3 is PC2 -> S2 -> S1 -> S3 -> PC3 -> S3 -> S1 -> S2 -> PC2
+Request Packet: PC2 -> S2 -> S1 -> S3 -> PC3
+Reply Packet: PC3 -> S3 -> S1 -> S2 -> PC2
+
+6. Assume we continue from the previous move(Pinged from PC1 to PC2), after Pinging from PC2
+to PC3, what would the backward learning table looks like for each switch(S1, S2, S3)?
+a. Example: S1: PC1(Fa0/3), PC4(Fa0/4)
+b. Answer:
+c. S1: PC1(Fa0/3), PC2(Fa0/1), PC3(Fa0/2)
+d. S2: PC1(Fa0/1), PC2(Fa0/3), PC3(Fa0/1)
+e. S3: PC1(Fa0/1), PC2(Fa0/1), PC3(Fa0/3)
+
+S Ans:
+For Switch S1:
+PC1(Fa0/3), S2(Fa0/1), S3(Fa0/2)
+
+For Switch S2:
+S1(Fa0/1), PC2(Fa0/3)
+
+For Switch S3:
+PC3(Fa0/3), S1(Fa0/1)
+
+7. When pinging from PC2 to PC3, we have a ‘shorter path’ from S2_fa0/2 to S3_fa0/2, why PDU(P) message did not take that path?
+
+Answer:
+Because the path S2_fa0/2 to S3_fa0/2 is disabled/blocked (the port Fa0/2 of switch S3 is in blocking state)in topology since there is a loop and based on the STP, that particular port was disabled.
+
+
+Task8
+----------
+4. How does the network topology look like after 7.1 – 7.3? What change have you noticed?
+
+Answer: After disabling the Spanning Tree Protocol, the network topology will be changed. All the ports of all the switches will be in forwarding state along with the previously blocked port Fa0/2 of switch S3.
+
+7. Was the Ping successful? What happened to Ping message? Why? 
+
+Answer: Since the STP is disabled, it can lead to the creation of multiple paths between network devices, which can result in packets being forwarded in a loop, causing the PDU (Protocol Data Unit) message to loop indefinitely.
+
+8. How to Fix it?
+
+Answer: Now, there is a loop formed and broadcast storms will occur due to the broadcast messages that each switch sends. To avoid this scenario, we need to re-enable the spanning tree protocol.
+
+
+Task9
+----------
+5. What has changed about the network topology? Why?(which port of which switch is not active anymore? which port of which switch has changed its port state? Why?)
+
+Answer: As the topology is modified by shutting down port Fa0/1 of switch S1, the spanning-tree protocol will re-adjust and re-run again. Now, the port Fa0/1 of switch S2 is not active anymore.
+The switch S1 is still the root bridge and all its ports except Fa0/1 will be in the forwarding state. For switch S2, the port Fa0/2 is now the root port and Fa0/3 is the designated port. For switch S3, the port Fa0/1 is the root port and Fa0/2, Fa0/3 ports are designated ports. No blocking ports now as one port of switch S1 is already in shutdown.
+
+6. What has changed about the way that S1 forwards traffic?
+
+Answer: a. S1 will not transfer packet through port fa0/1 as it is disabled. It will use other ports to forward message(fa0/3, fa0/2 and fa0/4)
+b. It has changed in a way like if a PDU is sent from PC1 to PC2, since the port Fa0/1 of S1 is shutdown, the packet will go through PC1->S1->S3->S2->PC2.
+
+7. What has changed about the way that S2 forwards traffic?
+
+Answer: a. S2 will not forward traffic through the port fa0/1 and it will use fa0/3 and fa0/2 to forward its traffic.
+b. It has changed in a way like if a PDU is sent from PC2 to PC3, the packet will go through as PC2->S2->S3->PC3. Note that previously the port Fa0/2 of S3 was in blocking state, but now it is the designated port and can forward packets.
+
+8. What has changed about the way that S3 forwards traffic?
+
+Answer: 1. Earlier, S3 did not forward it using port fa0/2 but now since it is enabled , it can forward traffic using posts fa0/2 , fa0/3 and fa0/1
+2. It has changed in a way like if a PDU is sent from PC3 to PC1, the packet will go through as PC3->S3->S1->PC1.
+
+9. Does the root bridge switch for the VLAN 1 spanning tree changed? Why?
+
+Answer: The root bridge has not changed even when the topology is modified. Even though there is a disabled port at switch S1, it is still the root bridge because the bridge priority value of S1 is still lower than the all other switches in the network. In other words, its not like the whole switch is disabled, only the port associated to that switch is disabled. Hence, S1 is still the root bridge switch.
